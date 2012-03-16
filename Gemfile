@@ -22,7 +22,7 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 gem "ckeditor", :git => 'git://github.com/galetahub/ckeditor.git', :ref => 'b336d27'
 gem "htmlentities"
-#gem "rtc", :git => 'git://github.com/jeffrey-s-foster/rtc.git'
+gem "rtc", :path => "vendor/rtc"
 
 # Gems used only for assets and not required
 # in production environments by default.
