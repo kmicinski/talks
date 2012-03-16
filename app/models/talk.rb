@@ -1,4 +1,6 @@
 class Talk < ActiveRecord::Base
+  rtc_annotated
+
   belongs_to :owner, :class_name => "User"
   has_and_belongs_to_many :lists, :include => :subscriptions
   has_many :subscriptions, :as => :subscribable, :include => :user, :dependent => :destroy
@@ -13,69 +15,84 @@ class Talk < ActiveRecord::Base
 
   attr_accessor :trigger_watch_email
 
+  # TODO: type?
   def start_end_same_day
     if start_time && end_time && (start_time.to_date != end_time.to_date)
       errors.add(:internal_error, "- start time and end time must be on same day")
     end
   end
 
+  # TODO: type?
   def start_end_not_error
     errors.add(:start_time, "- Invalid start time") if not start_time
     errors.add(:end_time, "- Invalid end time") if not end_time
   end
 
+  # TODO: type?
   def start_less_than_end
     errors.add(:end_time, "- End time must be greater than start time") if (start_time && end_time && (not (end_time > start_time)))
   end
 
+  # TODO: type?
   def self.upcoming
     # use end_time so talks going on now still appear
     where("end_time > ?", Time.zone.now)
   end
 
+  # TODO: type?
   def self.past
     where("end_time < ?", Time.zone.now)
   end
 
+  # TODO: type?
   def self.today
     where("end_time > ? and start_time < ?", Time.zone.now.beginning_of_day, Time.zone.now.end_of_day)
   end
 
+  # TODO: type?
   def self.this_week
     # In Rails 3.2, beginning/end_of_week take a start day parameter
     where("end_time > ? and start_time < ?", (Time.zone.now + 1.day).beginning_of_week - 1.day, (Time.zone.now + 1.day).end_of_week - 1.day)
   end
 
+  # TODO: useful type?
   def past?
     end_time < Time.zone.now
   end
 
+  # TODO: useful type?
   def upcoming?
     end_time > Time.zone.now
   end
 
+  # TODO: useful type?
   def today?
     (end_time > Time.zone.now.beginning_of_day) && (start_time < Time.zone.now.end_of_day)
   end
 
+  # TODO: useful type?
   def this_week?
     (end_time > (Time.zone.now + 1.day).beginning_of_week - 1.day) && (start_time < (Time.zone.now + 1.day).end_of_week - 1.day)
   end
 
+  # TODO: useful type?
   def later_this_week?
     (not past?) && (end_time > (Time.zone.now + 1.day).beginning_of_week - 1.day) && (start_time < (Time.zone.now + 1.day).end_of_week - 1.day)
   end
 
+  # TODO: useful type?
   def next_week?
     (end_time > (Time.zone.now + 1.day).beginning_of_week + 6.day) && (start_time < (Time.zone.now + 1.day).end_of_week + 6.day)
   end
 
   # neither in the past, nor this week, nor next week
+  # TODO: useful type?
   def further_ahead?
     not (past? || later_this_week? || next_week?)
   end
 
   # range may be :all, :today, :this_week, :upcoming
+  # TODO: useful type?
   def match_range(range)
     (range == :all) ||
       (range == :past && past?) ||
@@ -84,6 +101,7 @@ class Talk < ActiveRecord::Base
       (range == :this_week && this_week?)
   end
 
+  typesig "(User) -> Subscription"
   def subscription(user)
     s = Subscription.where(:subscribable_id => id, :subscribable_type => "Talk", :user_id => user.id)
     return nil if s.length == 0
@@ -92,28 +110,34 @@ class Talk < ActiveRecord::Base
     return nil
   end
 
+  typesig "(User) -> .?"
   def owner?(user)
     return owner == user
   end
 
+  typesig "(User) -> .?"
   def poster?(user)
     return false
   end
 
+  typesig "(User) -> .?"
   def subscriber?(user)
     s = subscription(user)
     return s && (s.kind == :kind_subscriber)
   end
 
+  typesig "(User) -> .?"
   def watcher?(user)
     s = subscription(user)
     return s && (s.kind == :kind_watcher)
   end
 
+  typesig "(User) -> .?"
   def registered?(user)
     not (user && (registrations.where(:user_id => user.id).empty?))
   end
 
+  # TODO: type?
   def through(user)
     h = Hash.new []
     return h unless user
@@ -129,6 +153,7 @@ class Talk < ActiveRecord::Base
     return h
   end
 
+  # TODO: type?
   def email_watchers(changes)
     to_email = []
     to_email += subscribers # all direct subscribers

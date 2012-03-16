@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  rtc_annotated
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :lockable and :omniauthable
   devise :database_authenticatable, :confirmable, :registerable,
@@ -16,19 +18,23 @@ class User < ActiveRecord::Base
   validates :email, :presence => true, :uniqueness => true
   validates :name, :presence => true
 
+  typesig "() -> ActiveSupport::SafeBuffer"
   def name_and_email
     "#{name} &lt;#{email}&gt;".html_safe
   end
 
+  typesig "() -> ActiveSupport::SafeBuffer"
   def email_and_name
     "#{email} (#{name})".html_safe
   end
 
   # TODO: check performance
+  # TODO: type?
   def subscribed_lists
     subscriptions.where(:subscribable_type => "List").map { |s| [List.find(s.subscribable_id), s.kind] }
   end
 
+  # TODO: type?
   # TODO: check performance
   # Returns hash table mapping talks to subscription kind (:kind_subscriber{_through} or :kind_watcher{_through})
   # range may be :all, :today, :this_week, :upcoming

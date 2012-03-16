@@ -1,4 +1,5 @@
 class List < ActiveRecord::Base
+  rtc_annotated
   validates_presence_of :name
 
   has_and_belongs_to_many :talks
@@ -7,6 +8,7 @@ class List < ActiveRecord::Base
   has_many :subscriptions, :as => :subscribable, :include => :user, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :class_name => "User", :source => :user
 
+  typesig "(User) -> Subscription"
   def subscription(user)
     s = Subscription.where(:subscribable_id => id, :subscribable_type => "List", :user_id => user.id)
     return nil if s.length == 0
@@ -15,19 +17,23 @@ class List < ActiveRecord::Base
     return nil
   end
 
+  typesig "(User) -> .?"
   def owner?(user)
     return owners.include? user
   end
 
+  typesig "(User) -> .?"
   def poster?(user)
     return posters.include? user
   end
 
+  typesig "(User) -> .?"
   def watcher?(user)
     s = subscription(user)
     return s && (s.kind == :kind_watcher)
   end
 
+  typesig "(User) -> .?"
   def subscriber?(user)
     s = subscription(user)
     return s && (s.kind == :kind_subscriber)
