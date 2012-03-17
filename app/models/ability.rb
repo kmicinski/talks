@@ -2,7 +2,7 @@ class Ability
   rtc_annotated
   include CanCan::Ability
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def initialize(user)
     can :edit, user if user
     user ||= User.new # guest user (not logged in)

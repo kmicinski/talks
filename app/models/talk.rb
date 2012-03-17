@@ -110,29 +110,29 @@ class Talk < ActiveRecord::Base
     return nil
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def owner?(user)
     return owner == user
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def poster?(user)
     return false
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def subscriber?(user)
     s = subscription(user)
     return s && (s.kind == :kind_subscriber)
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def watcher?(user)
     s = subscription(user)
     return s && (s.kind == :kind_watcher)
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def registered?(user)
     not (user && (registrations.where(:user_id => user.id).empty?))
   end

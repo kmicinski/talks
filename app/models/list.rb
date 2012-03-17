@@ -17,23 +17,23 @@ class List < ActiveRecord::Base
     return nil
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def owner?(user)
     return owners.include? user
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def poster?(user)
     return posters.include? user
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def watcher?(user)
     s = subscription(user)
     return s && (s.kind == :kind_watcher)
   end
 
-  typesig "(User) -> .?"
+  typesig "(User)"
   def subscriber?(user)
     s = subscription(user)
     return s && (s.kind == :kind_subscriber)
