@@ -1,5 +1,7 @@
 module ApplicationHelper
+  rtc_annotated
 
+  typesig "(Array<String>) -> String"
   def join_with_and(a)
     return "" if a.length == 0
     return a[0] if a.length == 1

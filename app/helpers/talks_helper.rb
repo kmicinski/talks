@@ -1,5 +1,7 @@
 module TalksHelper
-
+  rtc_annotated
+  
+  typesig "(Talk) -> ActiveSupport::SafeBuffer"
   def render_speaker(talk)
     if talk.speaker.empty?
       @out = "No speaker yet"
@@ -15,6 +17,7 @@ module TalksHelper
     return @out.html_safe
   end
 
+  typesig "(Talk) -> ActiveSupport::SafeBuffer"
   def render_venue(talk)
     return "<i>No venue yet</i>".html_safe unless (talk.room || talk.building)
 
@@ -31,6 +34,7 @@ module TalksHelper
     return @out.html_safe
   end
 
+  typesig "(Talk) -> ActiveSupport::SafeBuffer"
   def render_time(talk)
     if talk.start_time && talk.end_time
       @out = (talk.start_time.strftime "%A, %B %-d, %Y, ") + (talk.start_time.strftime("%l:%M").lstrip)
@@ -45,6 +49,7 @@ module TalksHelper
     return @out.html_safe
   end
 
+  typesig "(Talk) -> ActiveSupport::SafeBuffer"
   def render_lists(talk)
     return (talk.lists
               .sort { |a,b| a.name <=> b.name }
@@ -52,6 +57,7 @@ module TalksHelper
               .join "&nbsp;&sdot;&nbsp;").html_safe
   end
 
+  typesig "(Array<List>) -> ActiveSupport::SafeBuffer"
   def render_array_of_lists(lists)
     return (lists
               .sort { |a,b| a.name <=> b.name }
@@ -66,6 +72,7 @@ module TalksHelper
   # h[:later_this_week][wday] - talks on wday of this week (wdays start at 0)
   # h[:next_week][wday] - talks of wday of next week
   # h[:beyond] - talks after next week
+  # TODO: type
   def organize_talks(talks)
     h = Hash.new
     h[:past] = []
@@ -107,6 +114,7 @@ module TalksHelper
     return h
   end
 
+  typesig "(DateTime) -> String"
   def format_day(time)
     time.strftime("%A, %B %-d, %Y")
   end
